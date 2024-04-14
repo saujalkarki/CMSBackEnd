@@ -2,6 +2,14 @@
 const express = require("express");
 const app = express();
 
+// setting up CORS
+const cors = require("cors");
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+  })
+);
+
 //parsing json data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -51,7 +59,7 @@ app.get("/readBlog", async (req, res) => {
   res.json({
     status: 200,
     message: "Blog fetched Successfully",
-    data: blogs,
+    blogs: blogs,
   });
 });
 
