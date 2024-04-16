@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 
-// setting up CORS
+// setting up CORS / SOP
 const cors = require("cors");
 app.use(
   cors({
@@ -27,8 +27,7 @@ dbConfig(URI);
 const Blog = require("./model/blogModel");
 
 app.get("/", (req, res) => {
-  res.json({
-    status: 200,
+  res.status(200).json({
     message: "This is the landing page of the site",
   });
 });
@@ -40,8 +39,7 @@ app.post("/createBlog", async (req, res) => {
     description: req.body.description,
   });
 
-  res.json({
-    status: 200,
+  res.status(201).json({
     message: "Blog created Successfully",
   });
 });
@@ -50,17 +48,15 @@ app.get("/readBlog", async (req, res) => {
   const blogs = await Blog.find();
 
   if (blogs.length === 0) {
-    res.json({
-      status: 404,
+    res.status(404).json({
       message: "No any Blogs Found",
     });
   } else {
+    res.status(200).json({
+      message: "Blog fetched Successfully",
+      blogs: blogs,
+    });
   }
-  res.json({
-    status: 200,
-    message: "Blog fetched Successfully",
-    blogs: blogs,
-  });
 });
 
 app.get("/readBlog/:id", async (req, res) => {
@@ -68,13 +64,11 @@ app.get("/readBlog/:id", async (req, res) => {
 
   const oneBlog = await Blog.findById();
   if (!oneBlog) {
-    res.json({
-      status: 404,
+    res.status(404).json({
       message: "No any Blog found on this id",
     });
   } else {
-    res.json({
-      status: 200,
+    res.status(200).json({
       message: "Blog with the ID fetched successfully",
     });
   }
@@ -94,8 +88,7 @@ app.patch("/updateBlog/:id", async (req, res) => {
     description,
   });
 
-  res.json({
-    status: 200,
+  res.status(200).json({
     message: "Blog updated Successfully",
   });
 });
@@ -106,15 +99,13 @@ app.delete("/deleteBlog/:id", async (req, res) => {
   console.log(id);
 
   if (!id) {
-    res.json({
-      status: 404,
+    res.status(404).json({
       message: "Blog with this id not founded",
     });
   } else {
     await Blog.findByIdAndDelete(id);
 
-    res.json({
-      status: 200,
+    res.status(200).json({
       message: "Blog deleted successfully",
     });
   }
