@@ -4,8 +4,9 @@ const Blog = require("../model/blogModel");
 // creating blog
 exports.createBlog = async (req, res) => {
   const { title, subTitle, description } = req.body;
+  const file = req.file;
 
-  if (!title || !subTitle || !description) {
+  if (!title || !subTitle || !description || !file) {
     return res.status(400).json({
       message: "Please enter all the data.",
     });
@@ -23,6 +24,7 @@ exports.createBlog = async (req, res) => {
     title,
     subTitle,
     description,
+    blogImage: `${process.env.IMG_PATH}/${req.file.filename}`,
   });
 
   res.status(200).json({
@@ -88,7 +90,7 @@ exports.updateBlog = async (req, res) => {
   const blogExist = await Blog.findById(id);
 
   if (!blogExist) {
-    return res.stauts(400).json({
+    return res.status(400).json({
       message: "Blog with this id not founded.",
     });
   }
@@ -97,6 +99,7 @@ exports.updateBlog = async (req, res) => {
     title,
     subTitle,
     description,
+    blogImage: `${process.env.IMG_PATH}/${req.file.filename}`,
   });
 
   res.status(200).json({
@@ -106,7 +109,7 @@ exports.updateBlog = async (req, res) => {
 
 // deleting blog
 exports.deleteBlog = async (req, res) => {
-  const id = req.parmas.id;
+  const id = req.params.id;
 
   const validId = mongoose.Types.ObjectId.isValid(id);
 

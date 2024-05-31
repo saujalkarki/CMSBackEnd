@@ -18,6 +18,9 @@ app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT;
 const URI = process.env.MONGO_URI;
 
+// giving permission to access the files from uploads
+app.use(express.static("uploads"));
+
 // Connecting to DataBase
 const dbConfig = require("./config/dbConfig");
 dbConfig(URI);

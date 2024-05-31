@@ -1,9 +1,9 @@
 const router = require("express").Router();
-// const multer = require("multer");
+const multer = require("multer");
 
-// requiring multer configs
-// const storage = require("../middleware/multerConfig");
-// const upload = multer({ storage: storage });
+// requiring multer config
+const storage = require("../middleware/multerConfig");
+const upload = multer({ storage: storage });
 
 //  requiring controllers
 const {
@@ -15,13 +15,16 @@ const {
 } = require("../controller/blogController");
 
 // creating and reading all blog
-router.route("/blog").get(readAllBlog).post(createBlog);
+router
+  .route("/blog")
+  .get(readAllBlog)
+  .post(upload.single("blogImage"), createBlog);
 
 //reading single blod, updating and deleting it
 router
   .route("/blog/:id")
   .get(readSingleBlog)
-  .patch(updateBlog)
+  .patch(upload.single("blogImage"), updateBlog)
   .delete(deleteBlog);
 
 module.exports = router;

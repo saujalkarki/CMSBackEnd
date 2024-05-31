@@ -16,6 +16,9 @@ const blogModel = new Schema(
       type: String,
       required: true,
     },
+    blogImage: {
+      type: String,
+    },
   },
   {
     timestamps: true,
