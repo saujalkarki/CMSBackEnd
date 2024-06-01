@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Blog = require("../model/blogModel");
+const fs = require("fs");
 
 // creating blog
 exports.createBlog = async (req, res) => {
@@ -95,6 +96,17 @@ exports.updateBlog = async (req, res) => {
     });
   }
 
+  fs.unlink(
+    `./uploads/${blogExist.blogImage.split("http://localhost:3000/")[1]}`,
+    (err) => {
+      if (err) {
+        return res.status(400).json({
+          message: "Blog Image didn't updated successfully.",
+        });
+      }
+    }
+  );
+
   await blogExist.updateOne({
     title,
     subTitle,
@@ -126,6 +138,17 @@ exports.deleteBlog = async (req, res) => {
       message: "Blog with this id not founded.",
     });
   }
+
+  fs.unlink(
+    `./uploads/${blogExist.blogImage.split("http://localhost:3000/")[1]}`,
+    (err) => {
+      if (err) {
+        return res.status(400).json({
+          message: "unable to delete File.",
+        });
+      }
+    }
+  );
 
   await blogExist.deleteOne();
 
