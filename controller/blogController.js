@@ -79,6 +79,7 @@ exports.readSingleBlog = async (req, res) => {
 exports.updateBlog = async (req, res) => {
   const id = req.params.id;
   const { title, subTitle, description } = req.body;
+  const file = req.file;
 
   const validId = mongoose.Types.ObjectId.isValid(id);
 
@@ -96,23 +97,40 @@ exports.updateBlog = async (req, res) => {
     });
   }
 
-  fs.unlink(
-    `./uploads/${blogExist.blogImage.split("http://localhost:3000/")[1]}`,
-    (err) => {
-      if (err) {
-        return res.status(400).json({
-          message: "Blog Image didn't updated successfully.",
-        });
+  if (file) {
+    fs.unlink(
+      `./uploads/${blogExist.blogImage.split("http://localhost:3000/")[1]}`,
+      (err) => {
+        if (err) {
+          return res.status(400).json({
+            message: "Blog Image didn't updated successfully.",
+          });
+        }
       }
-    }
-  );
+    );
 
-  await blogExist.updateOne({
-    title,
-    subTitle,
-    description,
-    blogImage: `${process.env.IMG_PATH}/${req.file.filename}`,
-  });
+    await blogExist.updateOne({
+      blogImage: `${process.env.IMG_PATH}/${req.file.filename}`,
+    });
+  }
+
+  if (title) {
+    await blogExist.updateOne({
+      title,
+    });
+  }
+
+  if (subTitle) {
+    await blogExist.updateOne({
+      subTitle,
+    });
+  }
+
+  if (description) {
+    await blogExist.updateOne({
+      description,
+    });
+  }
 
   res.status(200).json({
     message: "Blog updated successfully.",
